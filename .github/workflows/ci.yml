@@ -1,0 +1,56 @@
+# Checks the plugin on every pull request and every push to `main`:
+#
+#   - the manifests against their JSON schemas on SchemaStore
+#   - `claude plugin validate --strict`, Claude Code's own checks of the manifests, skills, hooks and MCP config, and the
+#     plugin directory's checks of the listing (icon, README, privacy policy)
+#   - scripts/validate.mjs: one version everywhere, the hosted OAuth MCP server with no key, skill frontmatter, and no em
+#     dash, emoji or console logging in any file
+#   - the hook's tests
+
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+
+      - name: The plugin's own rules
+        run: node scripts/validate.mjs
+
+      - name: The hook's tests
+        run: node --test scripts/*.test.mjs
+
+      - name: The manifests against their JSON schemas
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/schemas"
+          curl -fsSL https://json.schemastore.org/claude-code-plugin-manifest.json -o "$RUNNER_TEMP/schemas/plugin.json"
+          curl -fsSL https://json.schemastore.org/claude-code-marketplace.json -o "$RUNNER_TEMP/schemas/marketplace.json"
+          ajv() { npx -y -p ajv-cli@5.0.0 -p ajv-formats@3.0.1 ajv validate --spec=draft7 --strict=false -c ajv-formats "$@"; }
+          ajv -s "$RUNNER_TEMP/schemas/plugin.json" -d .claude-plugin/plugin.json
+          ajv -s "$RUNNER_TEMP/schemas/marketplace.json" -d .claude-plugin/marketplace.json
+
+      - name: claude plugin validate
+        run: |
+          set -euo pipefail
+          npx -y @anthropic-ai/claude-code@2.1.316 plugin validate --strict .
+          npx -y @anthropic-ai/claude-code@2.1.316 plugin validate --strict --profile directory .claude-plugin/plugin.json

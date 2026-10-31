@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "flung",
+  "owner": {
+    "name": "Flung",
+    "url": "https://flung.dev"
+  },
+  "metadata": {
+    "description": "The Flung plugin for Claude Code.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "flung",
+      "source": "./",
+      "description": "Schedule social posts, connect accounts and turn releases into posts with the hosted Flung MCP server, signed in with OAuth."
+    }
+  ]
+}

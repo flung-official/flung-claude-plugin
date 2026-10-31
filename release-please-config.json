@@ -1,0 +1,37 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+
+  "include-component-in-tag": false,
+  "include-v-in-tag": true,
+
+  "pull-request-header": "Merging this moves the plugin's version in `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json`, writes its section of `CHANGELOG.md`, tags `v<version>` and creates the GitHub release. Installs pick up `main` as soon as it is pushed; the version tells Claude Code there is an update.",
+  "pull-request-footer": "Opened by the release workflow, .github/workflows/release-please.yml.",
+
+  "changelog-sections": [
+    { "type": "feat", "section": "Added" },
+    { "type": "fix", "section": "Fixed" },
+    { "type": "perf", "section": "Fixed" },
+    { "type": "refactor", "section": "Changed" },
+    { "type": "revert", "section": "Changed" },
+    { "type": "docs", "section": "Changed", "hidden": true },
+    { "type": "chore", "section": "Changed", "hidden": true },
+    { "type": "test", "section": "Changed", "hidden": true },
+    { "type": "ci", "section": "Changed", "hidden": true },
+    { "type": "build", "section": "Changed", "hidden": true },
+    { "type": "style", "section": "Changed", "hidden": true }
+  ],
+
+  "packages": {
+    ".": {
+      "release-type": "simple",
+      "package-name": "flung",
+      "changelog-path": "CHANGELOG.md",
+      "bump-minor-pre-major": true,
+      "bump-patch-for-minor-pre-major": false,
+      "extra-files": [
+        { "type": "json", "path": ".claude-plugin/plugin.json", "jsonpath": "$.version" },
+        { "type": "json", "path": ".claude-plugin/marketplace.json", "jsonpath": "$.metadata.version" }
+      ]
+    }
+  }
+}

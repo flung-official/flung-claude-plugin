@@ -1,0 +1,58 @@
+# Turns the Conventional Commits landing on `main` into versions of the plugin, a section of CHANGELOG.md, a `v<version>` tag
+# and a GitHub release.
+#
+#   commit `feat(post): ...`    ->  next minor + an "Added" entry
+#   commit `fix(hook): ...`     ->  next patch + a "Fixed" entry
+#   commit `feat!: ...`         ->  breaking: a minor while the plugin is 0.x
+#   commit `ci: ...`, `docs: ...` ->  nothing
+#
+# Only `feat`, `fix`, `perf`, `refactor`, `revert` and a breaking change open a release; anything else waits for the next one
+# of those. The sections are in release-please-config.json; the last released version is in .release-please-manifest.json.
+# The release PR also moves `version` in .claude-plugin/plugin.json and `metadata.version` in .claude-plugin/marketplace.json,
+# which is how Claude Code sees there is an update.
+#
+# There is nothing to publish: Claude Code installs the plugin from this repository's `main`. So the release PR waits for a
+# person to merge it, and the push of that merge tags it and creates the GitHub release.
+#
+#   push to `main`       keep the one release PR current, and release a PR a person merged
+#   workflow_dispatch    the same, by hand (Actions > release-please > Run)
+#
+# Needs "Allow GitHub Actions to create and approve pull requests" (Settings > Actions > General). A PR opened with
+# GITHUB_TOKEN gets no CI run of its own; the commits it releases already passed CI on `main`.
+
+name: release-please
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: release-please
+  cancel-in-progress: false
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write # the release PR branch, the tag and the GitHub release
+      pull-requests: write # opening and updating the release PR
+      issues: write # PR labels belong to issues: `autorelease: pending` and `autorelease: tagged`
+    steps:
+      - uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+        id: rp
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+          target-branch: main
+          token: ${{ github.token }}
+
+      - name: Summary
+        if: steps.rp.outputs.release_created == 'true'
+        env:
+          TAG: ${{ steps.rp.outputs.tag_name }}
+          URL: ${{ steps.rp.outputs.html_url }}
+        run: echo "Released $TAG ($URL)" | tee -a "$GITHUB_STEP_SUMMARY"

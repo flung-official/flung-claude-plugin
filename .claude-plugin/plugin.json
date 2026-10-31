@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "flung",
+  "displayName": "Flung",
+  "version": "0.1.0",
+  "description": "Flung social posting in Claude Code: the hosted Flung MCP server signed in with OAuth, skills to draft and schedule posts in your own time zone, connect and reconnect accounts per brand, turn a release of the repository into a post, and check the queue, plus a quiet hook that suggests a release post after you tag.",
+  "author": {
+    "name": "Flung",
+    "url": "https://flung.dev"
+  },
+  "homepage": "https://docs.flung.dev/mcp",
+  "repository": "https://github.com/flung-official/flung-claude-plugin",
+  "license": "MIT",
+  "privacyPolicyUrl": "https://docs.flung.dev/privacy",
+  "icon": ".claude-plugin/icon.png",
+  "keywords": [
+    "social-media",
+    "scheduling",
+    "mcp",
+    "releases",
+    "changelog",
+    "x",
+    "linkedin",
+    "bluesky"
+  ]
+}
