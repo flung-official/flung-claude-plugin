@@ -19,7 +19,7 @@ The Flung plugin for Claude Code. It connects Claude to the hosted Flung MCP ser
 | What does it need? | A Flung account (the free plan works) and Node 18 or newer for the hook. No API key. |
 | How does it sign in? | With OAuth: your browser opens Flung's sign-in, and you approve the workspace Claude may use. |
 | Does it post by itself? | No. Every skill shows the draft and asks before it schedules anything, and connecting an account always needs you to approve on the platform. |
-| Where is the guide? | [docs.flung.dev/mcp](https://docs.flung.dev/mcp) |
+| Where is the guide? | [docs.flung.dev/claude-code-plugin](https://docs.flung.dev/claude-code-plugin): install, sign-in, each skill with an example, the release workflow, the hook and troubleshooting. |
 
 ## Install
 
@@ -84,6 +84,7 @@ After a Bash command that makes a release (`git tag <name>` or `gh release creat
 |---|---|
 | A bug or an idea for the plugin | An issue on this repository |
 | A security problem | `SECURITY.md`: report it privately, never in an issue |
+| How to use the plugin | [Claude Code plugin](https://docs.flung.dev/claude-code-plugin), with troubleshooting |
 | How the tools work | [MCP tools](https://docs.flung.dev/mcp/tools) and [Prompts and recipes](https://docs.flung.dev/agents/prompts) |
 
 ## Contributing
@@ -94,6 +95,8 @@ Commits follow [Conventional Commits](https://www.conventionalcommits.org): `fea
 
 | Link | Why |
 |---|---|
+| [Claude Code plugin](https://docs.flung.dev/claude-code-plugin) | The full guide to this plugin |
+| [Ways to use Flung](https://docs.flung.dev/ways-to-use) | The plugin, the MCP server, the API and SDK, and webhooks, side by side |
 | [Connect an AI agent](https://docs.flung.dev/mcp) | The MCP server in other clients, and with an API key |
 | [Time zones](https://docs.flung.dev/time-zones) | How Flung reads a local time |
 | [flung-mcp](https://github.com/flung-official/flung-mcp) | Every tool the server has |
